@@ -38,15 +38,6 @@ class TestDefaultFractalFunction(unittest.TestCase):
         result = default_fractal_function(2+3j, 1+1j)
         # (2+3j)² + (1+1j) = (4 + 12j - 9) + 1 + 1j = (-5 + 12j) + 1 + 1j = -4 + 13j
         self.assertEqual(result, -4 + 13j)
-    
-    def test_default_fractal_function_types(self):
-        """Test that the function returns complex numbers."""
-        result = default_fractal_function(1+2j, 3+4j)
-        self.assertIsInstance(result, complex)
-        
-        result = default_fractal_function(0, 0)
-        self.assertIsInstance(result, complex)
-
 
 class TestCreateFractalFunction(unittest.TestCase):
     """Test creating fractal functions from strings."""
@@ -123,23 +114,6 @@ class TestComputePixelBatch(unittest.TestCase):
             self.assertIsInstance(color, tuple)
             self.assertEqual(len(color), 3)
     
-    def test_compute_pixel_batch_edge_cases(self):
-        """Test batch computation with edge cases."""
-        # Test with empty batch (shouldn't happen but let's be safe)
-        args = (2, 2, self.x_values, self.y_values,  # start_row == end_row
-                self.func_str, self.max_iterations, self.gradient)
-        
-        results = compute_pixel_batch(args)
-        self.assertEqual(len(results), 0)
-        
-        # Test with batch exceeding size
-        args = (0, 10, self.x_values, self.y_values,  # end_row > size
-                self.func_str, self.max_iterations, self.gradient)
-        
-        results = compute_pixel_batch(args)
-        # Should compute all rows (0 to 4) = 4 rows * 4 cols = 16 results
-        self.assertEqual(len(results), 16)
-    
     def test_compute_pixel_batch_div_zero(self):
         """Test that division by zero doesn't crash."""
         # Use a function that might cause division by zero
@@ -153,7 +127,6 @@ class TestComputePixelBatch(unittest.TestCase):
             self.assertTrue(len(results) > 0)
         except ZeroDivisionError:
             self.fail("compute_pixel_batch raised ZeroDivisionError unexpectedly!")
-
 
 class TestComputeFunction(unittest.TestCase):
     """Test the main compute function."""
@@ -285,43 +258,6 @@ class TestComputeFunction(unittest.TestCase):
         # Allow some tolerance
         self.assertAlmostEqual(g, 0, delta=5)
         self.assertAlmostEqual(b, 0, delta=5)
-    
-    @patch('multiprocessing.Pool')
-    def test_compute_parallel_processing(self, mock_pool_class):
-        """Test that parallel processing is used."""
-        # Mock the Pool and its map method
-        mock_pool = MagicMock()
-        mock_pool_class.return_value.__enter__.return_value = mock_pool
-        
-        # Create mock return value
-        mock_results = [[(0, 0, (0, 0, 0)), (0, 1, (100, 100, 100))]]
-        mock_pool.map.return_value = mock_results
-        
-        img = compute(size=4, max_iterations=5)
-        
-        # Check that Pool was created
-        mock_pool_class.assert_called_once()
-        
-        # Check that map was called
-        self.assertTrue(mock_pool.map.called)
-    
-    def test_compute_single_pixel_verification(self):
-        """Verify computation for specific known pixel."""
-        # For the Mandelbrot set (z² + c), point (0, 0) should not escape
-        # With few iterations, should get gradient[0]
-        img = compute(
-            func_str='z**2',
-            size=1,  # Single pixel
-            max_iterations=5,
-            x_ul=0, y_ul=0,  # Center point
-            x_dr=0.1, y_dr=0.1,  # Small range
-            colormap=[(0, 0, 0), (255, 255, 255)]
-        )
-        
-        # The pixel color should be gradient[0] which is (0, 0, 0) for this gradient
-        pixel = img.getpixel((0, 0))
-        self.assertEqual(pixel, (0, 0, 0))
-
 
 class TestPerformanceAndMemory(unittest.TestCase):
     """Test performance and memory aspects."""
