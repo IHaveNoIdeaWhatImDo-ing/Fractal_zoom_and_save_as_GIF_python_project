@@ -163,8 +163,8 @@ pylint main.py compute.py
 
 ## License
 
-[Add your license here]
+Nema bace
 
 ## Author
 
-[Add your name/contact information here]
+Az, sebe si i moq lichnost
