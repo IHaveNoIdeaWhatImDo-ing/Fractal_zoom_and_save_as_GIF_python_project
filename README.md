@@ -24,7 +24,7 @@ An interactive fractal visualization tool with a graphical user interface for ex
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/IHaveNoIdeaWhatImDo-ing/Fractal_zoom_and_save_as_GIF_python_project.git
 cd python_project
 ```
 
