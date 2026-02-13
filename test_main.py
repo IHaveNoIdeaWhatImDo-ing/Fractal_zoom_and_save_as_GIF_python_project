@@ -10,10 +10,8 @@ import os
 import argparse
 from PIL import Image, ImageTk
 
-# Add the parent directory to the path to import main
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Mock Tkinter for tests (since it may not be available in CI)
 try:
     from tkinter import Tk
     TKINTER_AVAILABLE = True
@@ -37,9 +35,7 @@ except ImportError:
     
     Tk = MockTk
 
-# Now import the modules (after setting up mock if needed)
 from main import validate_arguments, verify_func_not_malicious, FractalApp, main
-
 
 class TestValidateArguments(unittest.TestCase):
     """Test the validate_arguments function."""
