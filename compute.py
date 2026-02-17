@@ -26,7 +26,7 @@ from PIL import Image
 
 def default_fractal_function(z: complex, c: complex) -> complex:
     """Default z² + c fractal function"""
-    return z**2 + c
+    return z**2
 
 def create_fractal_function(func_str: str) -> Callable[[complex, complex], complex]:
     """Creates fractal function from string"""
